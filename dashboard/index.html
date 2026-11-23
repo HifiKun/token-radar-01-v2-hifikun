@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Radar v3 — what a pre-token protocol's token could be worth</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <p class="eyebrow">Token Radar v3 &middot; a make.fun bounty entry</p>
+  <h1>What a pre-token protocol&rsquo;s token could be worth</h1>
+  <p class="lede">Every protocol in this snapshot that <strong>records no token</strong>, ranked by an
+  implied value whose base multiple comes from the market itself — the median market-cap per
+  TVL dollar of the live-token protocols in its own category. Click a row for its farm plan
+  and the maths behind its rank.</p>
+  <p class="meta" id="meta">Loading snapshot&hellip;</p>
+</header>
+
+<section class="stats" id="stats" aria-label="Board totals"></section>
+
+<details class="model" id="model-box">
+  <summary>How the model works — read it before you trust a number</summary>
+  <div class="model-body">
+    <p><code>implied = TVL &times; market multiple &times; growth &times; maturity</code></p>
+    <ul>
+      <li><strong>Market multiple</strong> — the median <code>mcap / TVL</code> of the live-token
+        protocols in the same category, read from this snapshot. A category with fewer than three
+        live comparables takes the median across all of them (0.21). Every multiple is clamped to
+        0.05&ndash;1.00, so one thinly-traded outlier cannot set the price. The table below is the
+        model&rsquo;s own output, not a hand-picked list.</li>
+      <li><strong>Growth</strong> — the 7-day TVL change, clamped to &minus;40%..+60%, weighted 0.50:
+        <code>1 + growth/100 &times; 0.50</code>. A week of +4,448% is a data quirk, not a trend, so it is capped.</li>
+      <li><strong>Maturity</strong> — <code>0.80 + min(age, 540)/540 &times; 0.20</code>, from the day
+        DefiLlama began tracking the protocol; proven for 18 months counts as fully proven. Age unknown
+        counts as the board&rsquo;s median age.</li>
+      <li><strong>Readiness (0&ndash;100)</strong> — the same three figures, combined: half TVL scale
+        (log scale, $1M to the board&rsquo;s largest TVL), three tenths growth, two tenths age. It never
+        moves the rank, which the implied value alone sets.</li>
+    </ul>
+    <table class="multiples" id="multiples">
+      <caption>Market multiples by category, computed from this snapshot</caption>
+      <thead><tr><th>Category</th><th class="num">Multiple</th><th class="num">Live peers</th></tr></thead>
+      <tbody id="multiple-rows"></tbody>
+    </table>
+    <p class="fine">The board ranks <strong>pre-token</strong> protocols only. Wrapped, staked and
+    bridged products of a token that already trades are left out — WBTC is Bitcoin on Ethereum, not a
+    protocol still waiting on a launch — and so are versioned pools, exchange products and CEXs.
+    Protocols whose token already trades are shown in their own tab at the market's own value, never
+    mixed into the ranks. &ldquo;Records no token&rdquo; is what DefiLlama's record says; a protocol
+    on this board may still have a token its record does not carry. Nothing here predicts whether or
+    when a token is issued.</p>
+  </div>
+</details>
+
+<nav class="tabs" aria-label="Board views">
+  <button id="tab-board" class="tab active" type="button">Pre-token board <span id="count-board"></span></button>
+  <button id="tab-live" class="tab" type="button">Live tokens <span id="count-live"></span></button>
+</nav>
+
+<section class="controls" aria-label="Filters">
+  <label class="ctl">Search
+    <input id="q" type="search" placeholder="Protocol name or slug&hellip;" autocomplete="off">
+  </label>
+  <label class="ctl">Category
+    <select id="cat"><option value="">All categories</option></select>
+  </label>
+  <label class="ctl">Chain
+    <select id="chain"><option value="">All chains</option></select>
+  </label>
+  <label class="ctl">Sort by
+    <select id="sort">
+      <option value="value">Implied value (high to low)</option>
+      <option value="readiness">Readiness (high to low)</option>
+      <option value="tvl">TVL (high to low)</option>
+      <option value="growth">7-day growth (high to low)</option>
+      <option value="age">Age (oldest first)</option>
+      <option value="name">Name (A to Z)</option>
+    </select>
+  </label>
+  <label class="ctl">Readiness
+    <select id="ready">
+      <option value="0">Any score</option>
+      <option value="50">50 and up</option>
+      <option value="70">70 and up</option>
+      <option value="85">85 and up</option>
+    </select>
+  </label>
+  <label class="ctl check"><input id="watchlist-only" type="checkbox"> Watchlist only</label>
+  <p class="result-count" id="result-count" role="status"></p>
+</section>
+
+<main>
+  <table id="board" class="board">
+    <thead>
+      <tr>
+        <th class="num">#</th>
+        <th>Protocol</th>
+        <th>Category</th>
+        <th>Chains</th>
+        <th class="num">TVL</th>
+        <th class="num">7d</th>
+        <th class="num">Age</th>
+        <th class="num">Ready</th>
+        <th class="num">Implied value</th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <p class="empty" id="empty" hidden>No protocol matches these filters. Clear the search or pick another category.</p>
+
+  <section class="detail" id="detail" hidden aria-label="Protocol detail"></section>
+</main>
+
+<footer>
+  <p>Snapshot: DefiLlama protocols, fetched 2026-11-14. Floor for the house watchlist: $50,000,000.
+  Implied values are this entry's own claim, never make.fun's, and never a prediction that a token
+  will be issued. Farm steps are a starting point, not financial advice: check the protocol's own
+  pages before you move funds.</p>
+</footer>
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
